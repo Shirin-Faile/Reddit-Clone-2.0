@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
+import verifyToken from '../middleware/authMiddleware';
+import { AuthRequest } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
@@ -71,6 +73,13 @@ router.post('/login', async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ message: 'Server error'});
     }
+});
+
+router.get('/protected', verifyToken, (req: AuthRequest, res: Response) => {
+    res.json({
+        message: 'Access granted to protected route!',
+        user: req.user,
+    });
 });
 
 export default router;
