@@ -13,7 +13,7 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
     }
 
     try {
-        const decoded = jwt.verify(token, 'yourSecretKey'); // Replace this later with environment variable
+        const decoded = jwt.verify(token, 'yourSecretKey');
         req.user = decoded;
         next();
     } catch (error) {
