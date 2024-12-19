@@ -25,7 +25,7 @@ const CreatePost: React.FC = () => {
       );
       
       alert(response.data.message);
-      navigate('/posts');
+      navigate('/');
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(error.response.data.message);

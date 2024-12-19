@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 interface Post {
-  _id: string; 
-  title: string; 
+  _id: string;
+  title: string;
   content: string;
   user: {
     username: string;
+    _id: string;
   };
- }
+}
 
- function Posts() {
+function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  
+
+  const loggedInUserId = localStorage.getItem('userId');
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:5000/api/posts', {
           headers: {
-            Authorization: token? `Bearer ${token}` : '',
+            Authorization: `Bearer ${token}`,
           },
         });
         setPosts(response.data);
@@ -30,13 +33,29 @@ interface Post {
         if (error.response) {
           setErrorMessage(error.response.data.message);
         } else {
-          setErrorMessage('An error occured. Please try again.');
+          setErrorMessage('An error occurred. Please try again.');
         }
       }
     };
 
     fetchPosts();
   }, []);
+
+  const handleDeletePost = async (postId: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPosts(posts.filter((post) => post._id !== postId));
+      alert('Post deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting post:', error);
+      alert('Failed to delete post.');
+    }
+  };
 
   const handleCreatePost = () => {
     navigate('/posts/create');
@@ -59,14 +78,27 @@ interface Post {
       <div className="grid gap-4">
         {posts.map((post) => (
           <div key={post._id} className="bg-white p-4 rounded shadow">
-            <h2 className="text-xl font-bold">{post.title}</h2>
+            <Link
+              to={`/posts/${post._id}`}
+              className="text-xl font-bold text-blue-600 hover:underline"
+            >
+              {post.title}
+            </Link>
             <p className="text-gray-700">{post.content}</p>
             <p className="text-sm text-gray-500 mt-2">By: {post.user.username}</p>
+            {post.user._id === loggedInUserId && (
+              <button
+                onClick={() => handleDeletePost(post._id)}
+                className="bg-red-500 text-white px-2 py-1 rounded mt-2 hover:bg-red-600"
+              >
+                Delete Post
+              </button>
+            )}
           </div>
         ))}
       </div>
     </div>
   );
-};
+}
 
 export default Posts;

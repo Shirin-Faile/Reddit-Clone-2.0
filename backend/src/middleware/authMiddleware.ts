@@ -6,8 +6,7 @@ export interface AuthRequest extends Request {
 }
 
 const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
-    const token = req.header('Authorization');
-
+    const token = req.header('Authorization')?.split(' ')[1];
     if (!token) {
         return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
@@ -17,7 +16,7 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
         req.user = decoded;
         next();
     } catch (error) {
-        res.status(403).json({ message: 'Invalid or expired token.' });
+        return res.status(403).json({ message: 'Invalid or expired token.' });
     }
 };
 

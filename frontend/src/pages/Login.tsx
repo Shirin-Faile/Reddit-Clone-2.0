@@ -18,7 +18,7 @@ function Login () {
       });
       alert(response.data.message);
       localStorage.setItem('token', response.data.token);
-      navigate('/posts');
+      navigate('/');
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(error.response.data.message);
