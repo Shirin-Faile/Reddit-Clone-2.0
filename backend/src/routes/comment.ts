@@ -27,7 +27,7 @@ router.post('/:postId', verifyToken, async (req: AuthRequest, res: Response) => 
 
         const newComment = new Comment({
             content,
-            user: req.user.id,
+            user: req.user?.id,
             post: postId
         });
 
@@ -55,25 +55,35 @@ router.get('/:postId', async (req: Request, res: Response) => {
     }
 });
 
-//Delete a comment
+// Delete a comment
 router.delete('/:commentId', verifyToken, async (req: AuthRequest, res: Response) => {
     try {
         const { commentId } = req.params;
+
+        if (!req.user) {
+            return res.status(401).json({ message: 'Unauthorized. No user found.' });
+        }
 
         const comment = await Comment.findById(commentId);
         if (!comment) {
             return res.status(404).json({ message: 'Comment not found.' });
         }
 
-        if (comment.user.toString() !== req.user.id) {
+        const post = await Post.findById(comment.post);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        // Allow only the comment author or the post author to delete the comment
+        if (comment.user.toString() !== req.user.id && post.user.toString() !== req.user.id) {
             return res.status(403).json({ message: 'Not authorized to delete this comment.' });
         }
 
         await comment.deleteOne();
         res.json({ message: 'Comment deleted successfully.' });
     } catch (error) {
-        console.error('Error deleting comment.', error);
-        res.status(500).json({ messagee: 'Server error.' });
+        console.error('Error deleting comment:', error);
+        res.status(500).json({ message: 'Server error.' });
     }
 });
 

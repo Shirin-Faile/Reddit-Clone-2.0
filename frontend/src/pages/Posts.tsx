@@ -30,11 +30,9 @@ function Posts() {
         });
         setPosts(response.data);
       } catch (error: any) {
-        if (error.response) {
-          setErrorMessage(error.response.data.message);
-        } else {
-          setErrorMessage('An error occurred. Please try again.');
-        }
+        setErrorMessage(
+          error.response?.data?.message || 'An error occurred. Please try again.'
+        );
       }
     };
 
@@ -55,6 +53,10 @@ function Posts() {
       console.error('Error deleting post:', error);
       alert('Failed to delete post.');
     }
+  };
+
+  const handleEditPost = (postId: string) => {
+    navigate(`/posts/${postId}/edit`);
   };
 
   const handleCreatePost = () => {
@@ -87,12 +89,20 @@ function Posts() {
             <p className="text-gray-700">{post.content}</p>
             <p className="text-sm text-gray-500 mt-2">By: {post.user.username}</p>
             {post.user._id === loggedInUserId && (
-              <button
-                onClick={() => handleDeletePost(post._id)}
-                className="bg-red-500 text-white px-2 py-1 rounded mt-2 hover:bg-red-600"
-              >
-                Delete Post
-              </button>
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={() => handleEditPost(post._id)}
+                  className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeletePost(post._id)}
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
             )}
           </div>
         ))}
@@ -102,3 +112,4 @@ function Posts() {
 }
 
 export default Posts;
+
