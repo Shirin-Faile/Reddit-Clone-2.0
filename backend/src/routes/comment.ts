@@ -22,13 +22,13 @@ router.post('/:postId', verifyToken, async (req: AuthRequest, res: Response) => 
 
         const post = await Post.findById(postId);
         if (!post) {
-            return res.status(404).json({ message: 'Post not found.'});
+            return res.status(404).json({ message: 'Post not found.' });
         }
 
         const newComment = new Comment({
             content,
             user: req.user?.id,
-            post: postId
+            post: postId,
         });
 
         await newComment.save();
@@ -43,14 +43,44 @@ router.post('/:postId', verifyToken, async (req: AuthRequest, res: Response) => 
 router.get('/:postId', async (req: Request, res: Response) => {
     try {
         const { postId } = req.params;
-        
+
         const comments = await Comment.find({ post: postId })
-        .populate('user', 'username')
-        .sort({ createdAt: -1 });
+            .populate('user', 'username')
+            .sort({ createdAt: -1 });
 
         res.json(comments);
     } catch (error) {
         console.error('Error fetching comments.', error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
+// Edit a comment
+router.put('/:commentId', verifyToken, async (req: AuthRequest, res: Response) => {
+    try {
+        const { commentId } = req.params;
+        const { content } = req.body;
+
+        if (!content) {
+            return res.status(400).json({ message: 'Content is required.' });
+        }
+
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            return res.status(404).json({ message: 'Comment not found.' });
+        }
+
+        // Allow only the comment author to edit the comment
+        if (comment.user.toString() !== req.user?.id) {
+            return res.status(403).json({ message: 'Not authorized to edit this comment.' });
+        }
+
+        comment.content = content;
+        await comment.save();
+
+        res.json({ message: 'Comment updated successfully.', comment });
+    } catch (error) {
+        console.error('Error updating comment:', error);
         res.status(500).json({ message: 'Server error.' });
     }
 });

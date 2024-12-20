@@ -30,9 +30,11 @@ function Posts() {
         });
         setPosts(response.data);
       } catch (error: any) {
-        setErrorMessage(
-          error.response?.data?.message || 'An error occurred. Please try again.'
-        );
+        if (error.response) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage('An error occurred. Please try again.');
+        }
       }
     };
 
@@ -63,42 +65,62 @@ function Posts() {
     navigate('/posts/create');
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    alert('You have logged out.');
+    navigate('/login');
+  };
+
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Posts</h1>
-        <button
-          onClick={handleCreatePost}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Create Post
-        </button>
+        <h1 className="text-4xl font-extrabold text-white">Community Posts</h1>
+        <div>
+          <button
+            onClick={handleCreatePost}
+            className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:opacity-90 mr-2"
+          >
+            Create Post
+          </button>
+          <button
+            onClick={handleLogout}
+            className="bg-gradient-to-r from-red-400 to-pink-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:opacity-90"
+          >
+            Logout
+          </button>
+        </div>
       </div>
       {errorMessage && (
-        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+        <div className="text-red-500 bg-red-100 p-4 rounded-lg mb-4">
+          {errorMessage}
+        </div>
       )}
-      <div className="grid gap-4">
+      <div className="grid gap-6">
         {posts.map((post) => (
-          <div key={post._id} className="bg-white p-4 rounded shadow">
+          <div
+            key={post._id}
+            className="bg-white p-6 rounded-lg shadow-lg transition-transform transform"
+          >
             <Link
               to={`/posts/${post._id}`}
-              className="text-xl font-bold text-blue-600 hover:underline"
+              className="text-2xl font-bold text-blue-600 hover:underline"
             >
               {post.title}
             </Link>
-            <p className="text-gray-700">{post.content}</p>
-            <p className="text-sm text-gray-500 mt-2">By: {post.user.username}</p>
+            <p className="text-gray-700 mt-2">{post.content}</p>
+            <p className="text-sm text-gray-500 mt-4">By: {post.user.username}</p>
             {post.user._id === loggedInUserId && (
-              <div className="mt-2 flex gap-2">
+              <div className="mt-4 flex space-x-3">
                 <button
                   onClick={() => handleEditPost(post._id)}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-md shadow hover:opacity-90"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeletePost(post._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                  className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-md shadow hover:opacity-90"
                 >
                   Delete
                 </button>
@@ -112,4 +134,3 @@ function Posts() {
 }
 
 export default Posts;
-

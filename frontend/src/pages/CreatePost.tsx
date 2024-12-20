@@ -23,7 +23,7 @@ const CreatePost: React.FC = () => {
         { title, content },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       alert(response.data.message);
       navigate('/');
     } catch (error: any) {
@@ -36,46 +36,59 @@ const CreatePost: React.FC = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Create a New Post</h1>
-      {errorMessage && (
-        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
-      )}
-      <form onSubmit={handleCreatePost} className="bg-white p-4 rounded shadow">
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="title">
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-bold mb-2"
-            htmlFor="content"
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8 text-gray-800">
+        <h1 className="text-3xl font-extrabold text-center mb-6 text-purple-600">
+          Create a New Post
+        </h1>
+        {errorMessage && (
+          <div className="mb-4 p-3 text-red-700 bg-red-100 rounded-lg text-center">
+            {errorMessage}
+          </div>
+        )}
+        <form onSubmit={handleCreatePost} className="space-y-6">
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium mb-2 text-gray-600"
+            >
+              Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-purple-300 rounded-xl focus:ring-4 focus:ring-purple-400 focus:outline-none"
+              placeholder="Enter your post title"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="content"
+              className="block text-sm font-medium mb-2 text-gray-600"
+            >
+              Content
+            </label>
+            <textarea
+              id="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-pink-300 rounded-xl focus:ring-4 focus:ring-pink-400 focus:outline-none"
+              placeholder="Write your post content here..."
+              rows={6}
+              required
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
           >
-            Content
-          </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-            rows={4}
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Submit
-        </button>
-      </form>
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
