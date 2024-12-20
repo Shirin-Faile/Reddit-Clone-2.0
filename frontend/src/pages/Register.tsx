@@ -28,17 +28,21 @@ function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-orange-500 text-white">
-      <div className="bg-white text-gray-900 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Create an Account</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-orange-500 text-white p-4">
+      <div className="bg-white text-gray-900 p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-pink-600">
+          Create an Account
+        </h2>
         {errorMessage && (
           <div className="mb-4 p-3 bg-red-100 text-red-600 rounded-md text-sm">
             {errorMessage}
           </div>
         )}
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-6">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Username</label>
+            <label className="block text-gray-700 font-medium text-sm sm:text-base mb-1">
+              Username
+            </label>
             <input
               type="text"
               value={username}
@@ -49,7 +53,9 @@ function RegisterPage() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Password</label>
+            <label className="block text-gray-700 font-medium text-sm sm:text-base mb-1">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -61,12 +67,12 @@ function RegisterPage() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-md font-semibold shadow-md hover:opacity-90 focus:outline-none focus:ring focus:ring-pink-300"
+            className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-md font-semibold shadow-md hover:opacity-90 focus:outline-none focus:ring focus:ring-pink-300"
           >
             Register
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-500">
+        <p className="mt-6 text-center text-sm text-gray-500">
           Already have an account?{' '}
           <span
             onClick={() => navigate('/login')}

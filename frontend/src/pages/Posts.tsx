@@ -73,61 +73,72 @@ function Posts() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-extrabold text-white">Community Posts</h1>
-        <div>
-          <button
-            onClick={handleCreatePost}
-            className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:opacity-90 mr-2"
-          >
-            Create Post
-          </button>
-          <button
-            onClick={handleLogout}
-            className="bg-gradient-to-r from-red-400 to-pink-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:opacity-90"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-      {errorMessage && (
-        <div className="text-red-500 bg-red-100 p-4 rounded-lg mb-4">
-          {errorMessage}
-        </div>
-      )}
-      <div className="grid gap-6">
-        {posts.map((post) => (
-          <div
-            key={post._id}
-            className="bg-white p-6 rounded-lg shadow-lg transition-transform transform"
-          >
-            <Link
-              to={`/posts/${post._id}`}
-              className="text-2xl font-bold text-blue-600 hover:underline"
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-4 sm:p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white text-center sm:text-left">
+            Community Posts
+          </h1>
+          <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:space-x-3">
+            <button
+              onClick={handleCreatePost}
+              className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:opacity-90 mb-3 sm:mb-0"
             >
-              {post.title}
-            </Link>
-            <p className="text-gray-700 mt-2">{post.content}</p>
-            <p className="text-sm text-gray-500 mt-4">By: {post.user.username}</p>
-            {post.user._id === loggedInUserId && (
-              <div className="mt-4 flex space-x-3">
-                <button
-                  onClick={() => handleEditPost(post._id)}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-md shadow hover:opacity-90"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeletePost(post._id)}
-                  className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-md shadow hover:opacity-90"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
+              Create Post
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-gradient-to-r from-red-400 to-pink-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:opacity-90"
+            >
+              Logout
+            </button>
           </div>
-        ))}
+        </div>
+  
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="text-red-500 bg-red-100 p-4 rounded-lg mb-4 text-center">
+            {errorMessage}
+          </div>
+        )}
+  
+        {/* Posts Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map((post) => (
+            <div
+              key={post._id}
+              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105"
+            >
+              <Link
+                to={`/posts/${post._id}`}
+                className="text-xl sm:text-2xl font-bold text-blue-600 hover:underline"
+              >
+                {post.title}
+              </Link>
+              <p className="text-gray-700 mt-2">{post.content}</p>
+              <p className="text-sm text-gray-500 mt-4">By: {post.user.username}</p>
+  
+              {/* Edit/Delete Buttons */}
+              {post.user._id === loggedInUserId && (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => handleEditPost(post._id)}
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-md shadow hover:opacity-90"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeletePost(post._id)}
+                    className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-md shadow hover:opacity-90"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -36,9 +36,9 @@ const CreatePost: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8 text-gray-800">
-        <h1 className="text-3xl font-extrabold text-center mb-6 text-purple-600">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center p-4">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-6 sm:p-10 text-gray-800">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-6 text-purple-600">
           Create a New Post
         </h1>
         {errorMessage && (
@@ -50,7 +50,7 @@ const CreatePost: React.FC = () => {
           <div>
             <label
               htmlFor="title"
-              className="block text-sm font-medium mb-2 text-gray-600"
+              className="block text-sm sm:text-base font-medium mb-2 text-gray-600"
             >
               Title
             </label>
@@ -67,7 +67,7 @@ const CreatePost: React.FC = () => {
           <div>
             <label
               htmlFor="content"
-              className="block text-sm font-medium mb-2 text-gray-600"
+              className="block text-sm sm:text-base font-medium mb-2 text-gray-600"
             >
               Content
             </label>
