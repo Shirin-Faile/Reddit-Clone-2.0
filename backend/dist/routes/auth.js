@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
@@ -31,8 +31,8 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
             return res.status(400).json({ message: 'User already exists' });
         }
         // Hash the password
-        const salt = yield bcrypt_1.default.genSalt(10);
-        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
+        const salt = yield bcryptjs_1.default.genSalt(10);
+        const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
         // Create a new user
         const newUser = new user_1.default({
             username,
@@ -56,7 +56,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return res.status(400).json({ message: 'Invalid credentials' });
         }
         // Compare the password
-        const isMatch = yield bcrypt_1.default.compare(password, user.password);
+        const isMatch = yield bcryptjs_1.default.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
