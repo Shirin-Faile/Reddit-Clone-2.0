@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import verifyToken from '../middleware/authMiddleware';
