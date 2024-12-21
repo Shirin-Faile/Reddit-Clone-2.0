@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
+// Use the API base URL from the environment variables
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 interface Post {
   _id: string;
   title: string;
@@ -23,7 +26,7 @@ function Posts() {
     const fetchPosts = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/posts', {
+        const response = await axios.get(`${BASE_URL}/api/posts`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -44,7 +47,7 @@ function Posts() {
   const handleDeletePost = async (postId: string) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+      await axios.delete(`${BASE_URL}/api/posts/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
+// Use the API base URL from the environment variables
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 interface Comment {
   _id: string;
   content: string;
@@ -33,10 +36,10 @@ function PostDetail() {
   useEffect(() => {
     const fetchPostAndComments = async () => {
       try {
-        const postResponse = await axios.get(`http://localhost:5000/api/posts/${id}`);
+        const postResponse = await axios.get(`${BASE_URL}/api/posts/${id}`);
         setPost(postResponse.data);
 
-        const commentsResponse = await axios.get(`http://localhost:5000/api/comments/${id}`);
+        const commentsResponse = await axios.get(`${BASE_URL}/api/comments/${id}`);
         setComments(commentsResponse.data);
       } catch (error: any) {
         console.error('Error fetching post and comments:', error);
@@ -51,7 +54,7 @@ function PostDetail() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:5000/api/comments/${id}`,
+        `${BASE_URL}/api/comments/${id}`,
         { content: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -67,7 +70,7 @@ function PostDetail() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `http://localhost:5000/api/comments/${commentId}`,
+        `${BASE_URL}/api/comments/${commentId}`,
         { content: editingComment?.content },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -88,7 +91,7 @@ function PostDetail() {
   const handleDeleteComment = async (commentId: string) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/comments/${commentId}`, {
+      await axios.delete(`${BASE_URL}/api/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments(comments.filter((comment) => comment._id !== commentId));

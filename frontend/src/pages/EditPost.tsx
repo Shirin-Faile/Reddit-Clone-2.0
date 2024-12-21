@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
+// Use the API base URL from the environment variables
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 interface Post {
   title: string;
   content: string;
@@ -20,7 +23,7 @@ function EditPost() {
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/posts/${id}`);
+        const response = await axios.get(`${BASE_URL}/api/posts/${id}`);
         setPost(response.data);
       } catch (error: any) {
         console.error('Error fetching post details:', error);
@@ -44,7 +47,7 @@ function EditPost() {
       setErrorMessage(''); // Clear previous error messages
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/posts/${id}`,
+        `${BASE_URL}/api/posts/${id}`,
         post,
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -8,6 +8,9 @@ const CreatePost: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  // Use the API base URL from the environment variables
+  const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -19,7 +22,7 @@ const CreatePost: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/posts',
+        `${BASE_URL}/api/posts`, // Using your deployed backend URL
         { title, content },
         { headers: { Authorization: `Bearer ${token}` } }
       );

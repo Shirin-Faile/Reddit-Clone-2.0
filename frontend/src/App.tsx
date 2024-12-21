@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login from './pages/Login.tsx';
-import Register from './pages/Register.tsx';
-import Posts from './pages/Posts.tsx';
-import CreatePost from './pages/CreatePost.tsx';
-import PostDetail from './pages/PostDetail.tsx';
-import EditPost from './pages/EditPost.tsx';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Posts from './pages/Posts';
+import CreatePost from './pages/CreatePost';
+import PostDetail from './pages/PostDetail';
+import EditPost from './pages/EditPost';
 
 function App() {
   return (
