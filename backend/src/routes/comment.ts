@@ -31,8 +31,16 @@ router.post('/:postId', verifyToken, async (req: AuthRequest, res: Response) => 
             post: postId,
         });
 
-        await newComment.save();
-        res.status(201).json({ message: 'Comment added successfully.', comment: newComment });
+        const savedComment = await newComment.save();
+
+        // Populate the user field to include username
+        const populatedComment = await savedComment.populate('user', 'username');
+
+        // Debugging logs for backend
+        console.log('Saved Comment:', savedComment);
+        console.log('Populated Comment:', populatedComment);
+
+        res.status(201).json({ message: 'Comment added successfully.', comment: populatedComment });
     } catch (error) {
         console.error('Error adding comment:', error);
         res.status(500).json({ message: 'Server error.' });
@@ -45,7 +53,7 @@ router.get('/:postId', async (req: Request, res: Response) => {
         const { postId } = req.params;
 
         const comments = await Comment.find({ post: postId })
-            .populate('user', 'username')
+            .populate('user', 'username') // Populate user to get the username
             .sort({ createdAt: -1 });
 
         res.json(comments);
@@ -76,9 +84,12 @@ router.put('/:commentId', verifyToken, async (req: AuthRequest, res: Response) =
         }
 
         comment.content = content;
-        await comment.save();
+        const updatedComment = await comment.save();
 
-        res.json({ message: 'Comment updated successfully.', comment });
+        // Populate user field to include the username in the response
+        const populatedComment = await updatedComment.populate('user', 'username');
+
+        res.json({ message: 'Comment updated successfully.', comment: populatedComment });
     } catch (error) {
         console.error('Error updating comment:', error);
         res.status(500).json({ message: 'Server error.' });

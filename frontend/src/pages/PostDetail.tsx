@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-// Use the API base URL from the environment variables
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 interface Comment {
@@ -32,6 +31,7 @@ function PostDetail() {
   const [editingComment, setEditingComment] = useState<Comment | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const loggedInUserId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPostAndComments = async () => {
@@ -41,6 +41,7 @@ function PostDetail() {
 
         const commentsResponse = await axios.get(`${BASE_URL}/api/comments/${id}`);
         setComments(commentsResponse.data);
+        console.log('Fetched comments:', commentsResponse.data); // Debugging
       } catch (error: any) {
         console.error('Error fetching post and comments:', error);
         setErrorMessage('Failed to load post or comments.');
@@ -53,12 +54,27 @@ function PostDetail() {
   const handleAddComment = async () => {
     try {
       const token = localStorage.getItem('token');
+
       const response = await axios.post(
         `${BASE_URL}/api/comments/${id}`,
         { content: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setComments([response.data.comment, ...comments]);
+
+      const newCommentData = response.data.comment;
+
+      console.log('New comment from backend:', newCommentData);
+
+      if (newCommentData.user && typeof newCommentData.user === 'string') {
+        newCommentData.user = {
+          _id: newCommentData.user,
+          username: localStorage.getItem('username') || 'Unknown User',
+        };
+      }
+
+      console.log('Updated comment after processing:', newCommentData);
+
+      setComments([newCommentData, ...comments]);
       setNewComment('');
     } catch (error: any) {
       console.error('Error adding comment:', error);
@@ -75,13 +91,12 @@ function PostDetail() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Update the comment in the local state
       setComments(
         comments.map((comment) =>
           comment._id === commentId ? { ...comment, content: response.data.comment.content } : comment
         )
       );
-      setEditingComment(null); // Exit edit mode
+      setEditingComment(null);
     } catch (error: any) {
       console.error('Error editing comment:', error);
       alert('Failed to edit comment.');
@@ -108,7 +123,9 @@ function PostDetail() {
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
           <h1 className="text-4xl font-extrabold text-pink-600">{post.title}</h1>
           <p className="text-gray-700 mt-4">{post.content}</p>
-          <p className="text-sm text-gray-500 mt-2">By: {post.user.username}</p>
+          <p className="text-sm text-gray-500 mt-2">
+            By: {post.user?.username || 'Unknown User'}
+          </p>
 
           <h2 className="text-3xl font-bold text-purple-600 mt-8">Comments</h2>
           {comments.map((comment) => (
@@ -141,8 +158,10 @@ function PostDetail() {
               ) : (
                 <>
                   <p>{comment.content}</p>
-                  <p className="text-sm text-gray-500 mt-2">By: {comment.user.username}</p>
-                  {(comment.user._id === loggedInUserId || post.user._id === loggedInUserId) && (
+                  <p className="text-sm text-gray-500 mt-2">
+                    By: {comment.user?.username || 'Unknown User'}
+                  </p>
+                  {comment.user._id === loggedInUserId && (
                     <div className="flex space-x-2 mt-2">
                       <button
                         onClick={() => setEditingComment(comment)}
@@ -187,6 +206,13 @@ function PostDetail() {
           {errorMessage}
         </div>
       )}
+
+      <button
+        onClick={() => navigate('/')}
+        className="mt-6 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-md hover:bg-pink-600 transition-transform transform hover:scale-105 mx-auto block text-center"
+      >
+        Back to Home
+      </button>
     </div>
   );
 }

@@ -22,7 +22,7 @@ const CreatePost: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${BASE_URL}/api/posts`, // Using your deployed backend URL
+        `${BASE_URL}/api/posts`,
         { title, content },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -91,6 +91,13 @@ const CreatePost: React.FC = () => {
             Submit
           </button>
         </form>
+        
+        <button
+          onClick={() => navigate('/')}
+          className="mt-4 w-full py-3 bg-gray-200 text-gray-800 rounded-xl shadow hover:bg-gray-300 transition-transform transform hover:scale-105"
+        >
+          Back to Home
+        </button>
       </div>
     </div>
   );
